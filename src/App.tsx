@@ -122,10 +122,10 @@ const getAdaptiveSize = () => {
   const width = window.innerWidth;
   if (width < 480) {
     // Маленькие телефоны
-    return 80 + Math.random() * 25; // 40-65px
+    return 100 + Math.random() * 25; // 40-65px
   } else if (width < 768) {
     // Большие телефоны
-    return 100 + Math.random() * 30; // 50-80px
+    return 120 + Math.random() * 30; // 50-80px
   } else if (width < 1024) {
     // Планшеты
     return 155 + Math.random() * 35; // 55-90px
