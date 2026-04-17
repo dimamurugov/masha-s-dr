@@ -186,7 +186,7 @@ const getAdaptiveSize = () => {
             addImage();
           }
         }
-      }, 600);
+      }, 400);
     };
     
     startAddingImages();

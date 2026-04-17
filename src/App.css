@@ -1,4 +1,4 @@
-/* src/App.css - Простой чёрный шрифт для второй надписи */
+/* src/App.css - Простые лаконичные шрифты для обеих фраз */
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +9,7 @@
 
 body {
   overflow: hidden;
-  font-family: 'Georgia', 'Times New Roman', 'Palatino', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .app {
@@ -100,23 +100,23 @@ body {
   animation: slideUp 0.8s ease-out;
 }
 
-/* Акцентная фраза "Маша с днём рождения!" - с курсивом */
+/* Акцентная фраза "Маша с днём рождения!" - простой шрифт, но с градиентом */
 .greeting {
   font-size: clamp(1.4rem, 6vw, 2.3rem);
   font-weight: 700;
-  font-style: italic;
+  font-style: normal;
   background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FF6B9D, #C06CFF);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  text-shadow: none;
   margin-bottom: clamp(8px, 2vh, 12px);
-  letter-spacing: 1px;
+  letter-spacing: normal;
   white-space: nowrap;
-  font-family: 'Georgia', 'Times New Roman', 'Palatino', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-/* Вторая фраза - ПРОСТОЙ ПРИМИТИВНЫЙ ЧЁРНЫЙ ШРИФТ */
+/* Вторая фраза - простой чёрный шрифт */
 .wishes {
   font-size: clamp(0.9rem, 3.5vw, 1.2rem);
   font-weight: 400;
@@ -126,7 +126,7 @@ body {
   line-height: 1.4;
   padding: 0;
   letter-spacing: normal;
-  font-family: 'Arial', 'Helvetica', 'Verdana', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   opacity: 1;
 }
 
