@@ -96,9 +96,27 @@ const App: React.FC = () => {
     imagesRef.current = images;
   }, [images]);
 
+  // Функция для получения адаптивного размера картинки
+const getAdaptiveSize = () => {
+  const width = window.innerWidth;
+  if (width < 480) {
+    // Маленькие телефоны
+    return 60 + Math.random() * 25; // 40-65px
+  } else if (width < 768) {
+    // Большие телефоны
+    return 80 + Math.random() * 30; // 50-80px
+  } else if (width < 1024) {
+    // Планшеты
+    return 155 + Math.random() * 35; // 55-90px
+  } else {
+    // Десктопы
+    return 160 + Math.random() * 40; // 60-100px
+  }
+};
+
   // Добавление новой падающей картинки с контролем времени
   const addImage = useCallback(() => {
-    const size = 200 + Math.random() * 40;
+    const size = getAdaptiveSize() // 200 + Math.random() * 40;
     const newImage: FallingImage = {
       id: nextId,
       x: Math.random() * (window.innerWidth - size),
