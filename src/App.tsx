@@ -362,7 +362,7 @@ const getAdaptiveSize = () => {
         <div className="birthday-message">
           <p className="greeting">Маша с днём рождения!</p>
           <p className="wishes">Желаю тебе больше приятных эмоций</p>
-          <p className="wishes">в следующем году!</p>
+          <p className="wishes">в этой жизни!</p>
         </div>
       </div>
       
