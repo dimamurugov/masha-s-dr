@@ -113,7 +113,7 @@ const App: React.FC = () => {
   }, [addImage]);
 
   // Обработчики drag & drop
-  const handleMouseDown = (e: React.MouseEvent, id: number) => {
+  const handlePointerDown = (e: React.MouseEvent, id: number) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -135,7 +135,7 @@ const App: React.FC = () => {
     ));
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
+  const handlePointerMove = useCallback((e: MouseEvent) => {
     if (draggedId === null) return;
     
     setImages(prev => prev.map(img => {
@@ -157,7 +157,7 @@ const App: React.FC = () => {
     }));
   }, [draggedId, dragOffset]);
 
-  const handleMouseUp = useCallback(() => {
+  const handlePointerUp = useCallback(() => {
     if (draggedId !== null) {
       // Возвращаем картинке нормальное состояние
       setImages(prev => prev.map(img => 
@@ -170,14 +170,14 @@ const App: React.FC = () => {
   }, [draggedId]);
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('pointermove', handlePointerMove); // mousemove
+    window.addEventListener('pointerup', handlePointerUp);
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, [handlePointerMove, handlePointerUp]);
 
   return (
     <div className="app">
@@ -201,7 +201,7 @@ const App: React.FC = () => {
             zIndex: img.zIndex,
             cursor: draggedId === img.id ? 'grabbing' : 'grab',
           }}
-          onMouseDown={(e) => handleMouseDown(e, img.id)}
+          onPointerDown={(e) => handlePointerDown(e, img.id)}
           draggable={false}
         />
       ))}
