@@ -1,4 +1,4 @@
-/* src/App.css */
+/* src/App.css - Простой чёрный шрифт для второй надписи */
 * {
   margin: 0;
   padding: 0;
@@ -9,20 +9,28 @@
 
 body {
   overflow: hidden;
-  font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
-  touch-action: pan-y;
+  font-family: 'Georgia', 'Times New Roman', 'Palatino', serif;
 }
 
 .app {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 25%, #FF6B9D 50%, #C06CFF 75%, #6B6BFF 100%);
   overflow: hidden;
-  touch-action: none;
+  animation: bgShift 8s ease-in-out infinite;
 }
 
-/* Центральный контейнер с картинкой и текстом */
+@keyframes bgShift {
+  0%, 100% {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 25%, #FF6B9D 50%, #C06CFF 75%, #6B6BFF 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #FF8E53 0%, #FF6B9D 25%, #C06CFF 50%, #6B6BFF 75%, #FF6B6B 100%);
+  }
+}
+
+/* Центральный контейнер с идеально круглым белым фоном */
 .center-container {
   position: absolute;
   top: 50%;
@@ -32,48 +40,94 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(15px, 4vh, 30px);
-  z-index: 1;
+  gap: clamp(20px, 5vh, 40px);
   pointer-events: none;
   animation: float 3s ease-in-out infinite;
-  width: 90%;
-  max-width: 500px;
+  width: min(85vw, 650px);
+  height: min(85vw, 650px);
+  background: white;
+  border-radius: 50%;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  border: 3px solid rgba(255, 215, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+/* Эффект свечения бордера */
+.center-container:hover {
+  border-color: rgba(255, 215, 0, 0.9);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+  .center-container {
+    width: min(90vw, 500px);
+    height: min(90vw, 500px);
+    gap: 15px;
+    padding: 20px;
+    border-width: 2px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .center-container {
+    width: min(80vw, 550px);
+    height: min(80vw, 550px);
+    gap: 25px;
+    padding: 25px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .center-container {
+    width: min(75vw, 600px);
+    height: min(75vw, 600px);
+  }
 }
 
 .center-birthday-image {
-  width: clamp(120px, 30vw, 250px);
+  width: clamp(130px, 30vw, 240px);
   height: auto;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15));
   animation: popIn 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 
-/* Текст поздравления под картинкой */
+/* Текст поздравления */
 .birthday-message {
   text-align: center;
   width: 100%;
   animation: slideUp 0.8s ease-out;
 }
 
+/* Акцентная фраза "Маша с днём рождения!" - с курсивом */
 .greeting {
-  font-size: clamp(1.3rem, 5vw, 2rem);
-  font-weight: bold;
-  background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B);
+  font-size: clamp(1.4rem, 6vw, 2.3rem);
+  font-weight: 700;
+  font-style: italic;
+  background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FF6B9D, #C06CFF);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: none;
-  margin-bottom: clamp(8px, 2vh, 15px);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: clamp(8px, 2vh, 12px);
   letter-spacing: 1px;
   white-space: nowrap;
+  font-family: 'Georgia', 'Times New Roman', 'Palatino', serif;
 }
 
+/* Вторая фраза - ПРОСТОЙ ПРИМИТИВНЫЙ ЧЁРНЫЙ ШРИФТ */
 .wishes {
   font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.95);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  font-weight: 500;
+  font-weight: 400;
+  font-style: normal;
+  color: #000000;
+  text-shadow: none;
   line-height: 1.4;
-  padding: 0 10px;
+  padding: 0;
+  letter-spacing: normal;
+  font-family: 'Arial', 'Helvetica', 'Verdana', sans-serif;
+  opacity: 1;
 }
 
 @keyframes float {
@@ -109,15 +163,13 @@ body {
   }
 }
 
-/* Адаптивные стили для мобильных устройств */
+/* Адаптивные стили для текста на мобильных */
 @media (max-width: 480px) {
-  .center-container {
-    gap: 12px;
-  }
-  
   .greeting {
     white-space: normal;
     line-height: 1.3;
+    text-align: center;
+    font-size: 1.2rem;
   }
   
   .wishes {
@@ -126,17 +178,21 @@ body {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-  .center-container {
-    gap: 20px;
+  .greeting {
+    font-size: 1.6rem;
+  }
+  
+  .wishes {
+    font-size: 1rem;
   }
 }
 
-/* Падающие картинки */
+/* Падающие картинки с цветом #90EE4C */
 .falling-image {
   position: absolute;
   cursor: grab;
   transition: transform 0.05s linear;
-  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 8px 12px rgba(144, 238, 76, 0.5)) brightness(1.05) saturate(1.3);
   pointer-events: auto;
   user-select: none;
   will-change: transform, left, top;
@@ -144,15 +200,16 @@ body {
   -webkit-touch-callout: none;
   touch-action: none;
   animation: popIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+  opacity: 0.95;
 }
 
 @media (max-width: 768px) {
   .falling-image {
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 8px rgba(144, 238, 76, 0.5)) brightness(1.05) saturate(1.3);
   }
   
   .falling-image.dragging {
-    filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 8px 12px rgba(144, 238, 76, 0.6)) brightness(1.1) saturate(1.4);
   }
 }
 
@@ -161,8 +218,8 @@ body {
 }
 
 .falling-image.dragging {
-  opacity: 0.95;
-  filter: drop-shadow(0 12px 16px rgba(0,0,0,0.3));
+  opacity: 1;
+  filter: drop-shadow(0 12px 16px rgba(144, 238, 76, 0.6)) brightness(1.1) saturate(1.4);
   transition: none;
 }
 
@@ -171,5 +228,42 @@ body {
   .falling-image:hover {
     transform: scale(1.05);
     transition: transform 0.2s ease;
+    filter: drop-shadow(0 8px 12px rgba(144, 238, 76, 0.6)) brightness(1.1) saturate(1.4);
   }
+}
+
+/* Праздничные искорки */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.app::before {
+  content: '✨';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  font-size: 20px;
+  animation: sparkle 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.app::after {
+  content: '🎉';
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  font-size: 24px;
+  animation: sparkle 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }

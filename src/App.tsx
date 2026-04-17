@@ -328,7 +328,7 @@ const getAdaptiveSize = () => {
     };
   }, [handleMove, handleEnd]);
 
-  return (
+   return (
     <div className="app">
       {/* Центральная картинка с подписью */}
       <div className="center-container">
@@ -339,7 +339,8 @@ const getAdaptiveSize = () => {
         />
         <div className="birthday-message">
           <p className="greeting">Маша с днём рождения!</p>
-          <p className="wishes">Желаю тебе кучу приятных эмоций</p>
+          <p className="wishes">Желаю тебе больше приятных эмоций,</p>
+          <p className="wishes">в следующем году!</p>
         </div>
       </div>
       
