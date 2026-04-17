@@ -112,8 +112,21 @@ const App: React.FC = () => {
     return () => clearInterval(addInterval);
   }, [addImage]);
 
-  // Обработчики drag & drop
-  const handlePointerDown = (e: React.MouseEvent, id: number) => {
+  // Получение координат касания или мыши
+  const getClientCoordinates = (e: MouseEvent | TouchEvent): { x: number; y: number } | null => {
+    if ('touches' in e) {
+      // Сенсорное событие
+      const touch = e.touches[0];
+      if (!touch) return null;
+      return { x: touch.clientX, y: touch.clientY };
+    } else {
+      // Событие мыши
+      return { x: e.clientX, y: e.clientY };
+    }
+  };
+
+  // Обработчики drag & drop для мыши и сенсора
+  const handleStart = (e: React.MouseEvent | React.TouchEvent, id: number) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -121,10 +134,25 @@ const App: React.FC = () => {
     if (!imgElement) return;
     
     const rect = imgElement.getBoundingClientRect();
+    
+    // Получаем координаты в зависимости от типа события
+    let clientX, clientY;
+    if ('touches' in e) {
+      // Сенсорное событие
+      const touch = e.touches[0];
+      if (!touch) return;
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+    } else {
+      // Событие мыши
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
     setDraggedId(id);
     setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x: clientX - rect.left,
+      y: clientY - rect.top,
     });
     
     // Помечаем картинку как перетаскиваемую и поднимаем её
@@ -135,13 +163,18 @@ const App: React.FC = () => {
     ));
   };
 
-  const handlePointerMove = useCallback((e: MouseEvent) => {
+  const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (draggedId === null) return;
+    
+    const coords = getClientCoordinates(e);
+    if (!coords) return;
+    
+    e.preventDefault();
     
     setImages(prev => prev.map(img => {
       if (img.id === draggedId) {
-        let newX = e.clientX - dragOffset.x;
-        let newY = e.clientY - dragOffset.y;
+        let newX = coords.x - dragOffset.x;
+        let newY = coords.y - dragOffset.y;
         
         // Ограничиваем движение в пределах экрана
         newX = Math.max(0, Math.min(newX, window.innerWidth - img.width));
@@ -157,7 +190,7 @@ const App: React.FC = () => {
     }));
   }, [draggedId, dragOffset]);
 
-  const handlePointerUp = useCallback(() => {
+  const handleEnd = useCallback(() => {
     if (draggedId !== null) {
       // Возвращаем картинке нормальное состояние
       setImages(prev => prev.map(img => 
@@ -169,21 +202,28 @@ const App: React.FC = () => {
     }
   }, [draggedId]);
 
+  // Добавляем обработчики для мыши и сенсора
   useEffect(() => {
-    window.addEventListener('pointermove', handlePointerMove); // mousemove
-    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleMove, { passive: false });
+    window.addEventListener('touchend', handleEnd);
+    window.addEventListener('touchcancel', handleEnd);
     
     return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+      window.removeEventListener('touchcancel', handleEnd);
     };
-  }, [handlePointerMove, handlePointerUp]);
+  }, [handleMove, handleEnd]);
 
   return (
     <div className="app">
       <div className="birthday-text">
         <h1>С Днём Рождения!</h1>
-        <p className="subtitle">Перетаскивайте картинки мышкой ✨</p>
+        <p className="subtitle">Перетаскивайте картинки пальцем или мышкой ✨</p>
       </div>
       
       {images.map((img) => (
@@ -200,8 +240,10 @@ const App: React.FC = () => {
             transform: `rotate(${img.rotation}deg)`,
             zIndex: img.zIndex,
             cursor: draggedId === img.id ? 'grabbing' : 'grab',
+            touchAction: 'none', // Отключаем стандартную прокрутку на сенсорных экранах
           }}
-          onPointerDown={(e) => handlePointerDown(e, img.id)}
+          onMouseDown={(e) => handleStart(e, img.id)}
+          onTouchStart={(e) => handleStart(e, img.id)}
           draggable={false}
         />
       ))}
