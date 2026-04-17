@@ -14,7 +14,6 @@ import gf11 from './assets/giphy (11).gif'
 import gf12 from './assets/giphy (12).gif'
 import gf13 from './assets/giphy (13).gif'
 import gf14 from './assets/giphy (14).gif'
-import gf15 from './assets/giphy (15).gif'
 import gf16 from './assets/giphy (16).gif'
 import gf17 from './assets/giphy (17).gif'
 import gf18 from './assets/giphy (18).gif'
@@ -29,6 +28,7 @@ import gf26 from './assets/giphy (26).gif'
 import gf27 from './assets/giphy (27).gif'
 import gf28 from './assets/giphy (28).gif'
 import gf29 from './assets/giphy (29).gif'
+import base from './assets/base.gif'
 import './App.css';
 
 interface FallingImage {
@@ -60,7 +60,6 @@ const IMAGES = [
   gf12,
   gf13,
   gf14,
-  gf15,
   gf16,
   gf17,
   gf18,
@@ -331,11 +330,20 @@ const getAdaptiveSize = () => {
 
   return (
     <div className="app">
-      <div className="birthday-text">
-        <h1>С Днём Рождения!</h1>
-        <p className="subtitle">Перетаскивайте картинки пальцем или мышкой ✨</p>
+      {/* Центральная картинка с подписью */}
+      <div className="center-container">
+        <img 
+          src={base} 
+          alt="С Днём Рождения"
+          className="center-birthday-image"
+        />
+        <div className="birthday-message">
+          <p className="greeting">Маша с днём рождения!</p>
+          <p className="wishes">Желаю тебе кучу приятных эмоций</p>
+        </div>
       </div>
       
+      {/* Падающие картинки */}
       {images.map((img) => (
         <img
           key={img.id}
