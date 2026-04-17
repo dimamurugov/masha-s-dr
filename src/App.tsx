@@ -28,6 +28,17 @@ import gf26 from './assets/giphy (26).gif'
 import gf27 from './assets/giphy (27).gif'
 import gf28 from './assets/giphy (28).gif'
 import gf29 from './assets/giphy (29).gif'
+import gf30 from './assets/giphy (30).gif'
+import gf31 from './assets/giphy (31).gif'
+import gf32 from './assets/giphy (32).gif'
+import gf33 from './assets/giphy (33).gif'
+import gf34 from './assets/giphy (34).gif'
+import gf35 from './assets/giphy (35).gif'
+import gf36 from './assets/giphy (36).gif'
+import gf37 from './assets/giphy (37).gif'
+import gf38 from './assets/giphy (38).gif'
+import gf39 from './assets/giphy (39).gif'
+import gf40 from './assets/giphy (40).gif'
 import base from './assets/base.gif'
 import './App.css';
 
@@ -74,6 +85,17 @@ const IMAGES = [
   gf27,
   gf28,
   gf29,
+  gf30,
+  gf31,
+  gf32,
+  gf33,
+  gf34,
+  gf35,
+  gf36,
+  gf37,
+  gf38,
+  gf39,
+  gf40,
 ];
 
 const App: React.FC = () => {
@@ -339,7 +361,7 @@ const getAdaptiveSize = () => {
         />
         <div className="birthday-message">
           <p className="greeting">Маша с днём рождения!</p>
-          <p className="wishes">Желаю тебе больше приятных эмоций,</p>
+          <p className="wishes">Желаю тебе больше приятных эмоций</p>
           <p className="wishes">в следующем году!</p>
         </div>
       </div>
