@@ -87,7 +87,7 @@ body {
 }
 
 .center-birthday-image {
-  width: clamp(130px, 30vw, 240px);
+  width: clamp(130px, 50vw, 420px);
   height: auto;
   filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15));
   animation: popIn 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
