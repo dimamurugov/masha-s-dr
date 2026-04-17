@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import gf from './assets/giphy.gif'
 import gf1 from './assets/giphy (1).gif'
 import gf2 from './assets/giphy (2).gif'
-import gf3 from './assets/giphy (3).gif'
 import gf4 from './assets/giphy (4).gif'
 import gf5 from './assets/giphy (5).gif'
 import gf6 from './assets/giphy (6).gif'
@@ -15,6 +14,21 @@ import gf11 from './assets/giphy (11).gif'
 import gf12 from './assets/giphy (12).gif'
 import gf13 from './assets/giphy (13).gif'
 import gf14 from './assets/giphy (14).gif'
+import gf15 from './assets/giphy (15).gif'
+import gf16 from './assets/giphy (16).gif'
+import gf17 from './assets/giphy (17).gif'
+import gf18 from './assets/giphy (18).gif'
+import gf19 from './assets/giphy (19).gif'
+import gf20 from './assets/giphy (20).gif'
+import gf21 from './assets/giphy (21).gif'
+import gf22 from './assets/giphy (22).gif'
+import gf23 from './assets/giphy (23).gif'
+import gf24 from './assets/giphy (24).gif'
+import gf25 from './assets/giphy (25).gif'
+import gf26 from './assets/giphy (26).gif'
+import gf27 from './assets/giphy (27).gif'
+import gf28 from './assets/giphy (28).gif'
+import gf29 from './assets/giphy (29).gif'
 import './App.css';
 
 interface FallingImage {
@@ -35,7 +49,6 @@ const IMAGES = [
   gf,
   gf1,
   gf2,
-  gf3,
   gf4,
   gf5,
   gf6,
@@ -47,6 +60,21 @@ const IMAGES = [
   gf12,
   gf13,
   gf14,
+  gf15,
+  gf16,
+  gf17,
+  gf18,
+  gf19,
+  gf20,
+  gf21,
+  gf22,
+  gf23,
+  gf24,
+  gf25,
+  gf26,
+  gf27,
+  gf28,
+  gf29,
 ];
 
 const App: React.FC = () => {
@@ -55,6 +83,12 @@ const App: React.FC = () => {
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
+  // Refs для контроля анимации
+  const animationRef = useRef<number>(null);
+  // const lastTimestampRef = useRef<number>(0);
+  const isPageVisibleRef = useRef<boolean>(true);
+  const lastAddTimeRef = useRef<number>(Date.now());
+  
   // Используем ref для хранения текущих изображений без остановки анимации
   const imagesRef = useRef<FallingImage[]>([]);
   
@@ -62,9 +96,9 @@ const App: React.FC = () => {
     imagesRef.current = images;
   }, [images]);
 
-  // Добавление новой падающей картинки
+  // Добавление новой падающей картинки с контролем времени
   const addImage = useCallback(() => {
-    const size = 260 + Math.random() * 40;
+    const size = 200 + Math.random() * 40;
     const newImage: FallingImage = {
       id: nextId,
       x: Math.random() * (window.innerWidth - size),
@@ -81,46 +115,110 @@ const App: React.FC = () => {
     setNextId(prev => prev + 1);
   }, [nextId]);
 
-  // Анимация падения - теперь НЕ зависит от состояния перетаскивания
+  // Анимация падения с использованием requestAnimationFrame
   useEffect(() => {
-    const interval = setInterval(() => {
-      setImages(prev => 
-        prev
-          .map(img => {
-            // Если картинка перетаскивается - не двигаем её
-            if (img.isDragging) {
-              return img;
-            }
-            return {
-              ...img,
-              y: img.y + img.speed,
-            };
-          })
-          .filter(img => img.y < window.innerHeight + img.height)
-      );
-    }, 16);
-
-    return () => clearInterval(interval);
+    let lastTime = performance.now();
+    
+    const animate = (currentTime: number) => {
+      const deltaTime = Math.min(32, currentTime - lastTime); // Ограничиваем максимальный дельта-тайм
+      
+      if (deltaTime > 0 && isPageVisibleRef.current) {
+        setImages(prev => 
+          prev
+            .map(img => {
+              // Если картинка перетаскивается - не двигаем её
+              if (img.isDragging) {
+                return img;
+              }
+              // Плавное движение с учетом времени
+              const moveDistance = img.speed * (deltaTime / 16);
+              return {
+                ...img,
+                y: img.y + moveDistance,
+              };
+            })
+            .filter(img => img.y < window.innerHeight + img.height)
+        );
+      }
+      
+      lastTime = currentTime;
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animationRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
   }, []);
 
-  // Добавление новых картинок
+  // Добавление новых картинок с контролем времени и видимости
   useEffect(() => {
-    const addInterval = setInterval(() => {
-      addImage();
-    }, 600);
-
-    return () => clearInterval(addInterval);
+    let addInterval: number;
+    
+    const startAddingImages = () => {
+      if (addInterval) clearInterval(addInterval);
+      
+      addInterval = setInterval(() => {
+        // Добавляем картинку только если страница видима
+        if (isPageVisibleRef.current) {
+          // Ограничиваем максимальное количество картинок на экране
+          if (imagesRef.current.length < 50) {
+            addImage();
+          }
+        }
+      }, 600);
+    };
+    
+    startAddingImages();
+    
+    return () => {
+      if (addInterval) clearInterval(addInterval);
+    };
   }, [addImage]);
+
+  // Отслеживание видимости страницы
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      isPageVisibleRef.current = !document.hidden;
+      
+      // При возвращении на страницу сбрасываем счетчик времени добавления
+      if (!document.hidden) {
+        lastAddTimeRef.current = Date.now();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  // Очистка старых картинок при переполнении
+  useEffect(() => {
+    const cleanupInterval = setInterval(() => {
+      setImages(prev => {
+        if (prev.length > 60) {
+          // Удаляем самые старые картинки (первые в списке)
+          return prev.slice(-50);
+        }
+        return prev;
+      });
+    }, 10000); // Проверяем каждые 10 секунд
+    
+    return () => clearInterval(cleanupInterval);
+  }, []);
 
   // Получение координат касания или мыши
   const getClientCoordinates = (e: MouseEvent | TouchEvent): { x: number; y: number } | null => {
     if ('touches' in e) {
-      // Сенсорное событие
       const touch = e.touches[0];
       if (!touch) return null;
       return { x: touch.clientX, y: touch.clientY };
     } else {
-      // Событие мыши
       return { x: e.clientX, y: e.clientY };
     }
   };
@@ -135,16 +233,13 @@ const App: React.FC = () => {
     
     const rect = imgElement.getBoundingClientRect();
     
-    // Получаем координаты в зависимости от типа события
     let clientX, clientY;
     if ('touches' in e) {
-      // Сенсорное событие
       const touch = e.touches[0];
       if (!touch) return;
       clientX = touch.clientX;
       clientY = touch.clientY;
     } else {
-      // Событие мыши
       clientX = e.clientX;
       clientY = e.clientY;
     }
@@ -155,7 +250,6 @@ const App: React.FC = () => {
       y: clientY - rect.top,
     });
     
-    // Помечаем картинку как перетаскиваемую и поднимаем её
     setImages(prev => prev.map(img => 
       img.id === id 
         ? { ...img, isDragging: true, zIndex: 100 } 
@@ -176,7 +270,6 @@ const App: React.FC = () => {
         let newX = coords.x - dragOffset.x;
         let newY = coords.y - dragOffset.y;
         
-        // Ограничиваем движение в пределах экрана
         newX = Math.max(0, Math.min(newX, window.innerWidth - img.width));
         newY = Math.max(0, Math.min(newY, window.innerHeight - img.height));
         
@@ -192,7 +285,6 @@ const App: React.FC = () => {
 
   const handleEnd = useCallback(() => {
     if (draggedId !== null) {
-      // Возвращаем картинке нормальное состояние
       setImages(prev => prev.map(img => 
         img.id === draggedId 
           ? { ...img, isDragging: false, zIndex: 1 }
@@ -240,7 +332,7 @@ const App: React.FC = () => {
             transform: `rotate(${img.rotation}deg)`,
             zIndex: img.zIndex,
             cursor: draggedId === img.id ? 'grabbing' : 'grab',
-            touchAction: 'none', // Отключаем стандартную прокрутку на сенсорных экранах
+            touchAction: 'none',
           }}
           onMouseDown={(e) => handleStart(e, img.id)}
           onTouchStart={(e) => handleStart(e, img.id)}
